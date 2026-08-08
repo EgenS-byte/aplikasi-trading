@@ -14,6 +14,9 @@ if st.button("Ambil Data & Analisis"):
     # Ambil data dari Yahoo Finance
     data = yf.download(ticker, period=periode)
     
+    # === PERBAIKAN: Sederhanakan nama kolom agar mudah dipakai ===
+    data.columns = data.columns.droplevel(1)  # Hapus nama saham dari judul kolom
+    
     if data.empty:
         st.error("❌ Data tidak ditemukan! Periksa kode saham.")
     else:
@@ -30,14 +33,14 @@ if st.button("Ambil Data & Analisis"):
         st.subheader("📊 Data Terbaru")
         st.dataframe(data.tail(10))
 
-        # Ambil nilai terakhir
+        # Ambil nilai terakhir — .item() agar menjadi angka biasa
         terakhir = data.iloc[-1]
-        harga = terakhir['Close']
-        sma20 = terakhir['SMA20']
-        macd = terakhir['MACD']
-        sinyal = terakhir['Sinyal']
-        vol = terakhir['Volume']
-        vol_rata = data['Volume'].rolling(20).mean().iloc[-1]
+        harga = terakhir['Close'].item()
+        sma20 = terakhir['SMA20'].item()
+        macd = terakhir['MACD'].item()
+        sinyal = terakhir['Sinyal'].item()
+        vol = terakhir['Volume'].item()
+        vol_rata = data['Volume'].rolling(20).mean().iloc[-1].item()
 
         # Saran Sinyal
         st.subheader("📌 Hasil Analisis Saat Ini")
